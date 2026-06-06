@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soumente — O diário que cresce com você</title>
+<meta name="description" content="Soumente é o diário inteligente que transforma consciência em evolução real. Metas, emoções e uma IA que te conhece de verdade.">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADe0lEQVR4nO3YT4gbVRwH8O+bSTb/Nrsha1lqqRRExaK2Ry+lN73YdldaoaQYUMnsmFatSw89zeytpcYlm6TLLF1Cs+wmTLUFb568ePEkXlQQVOihFGzX6q7tTubNz0Myu2lw/xQzNtLfB0JI3p/f77038zIvAGOMMcYYY4wxxhhjjLEnh3gcQYlImKb5UGzTNEkIQY8jn/8EEQki2nbCd1qvV0JBByCCEALrq/tV+f3BO6rc7a6tpTCQVBWpiCatSHhy+elQ/JYQYqW7bZD5BTrThmEoU1NTHgDUK/qLIanuk8L14Ln3mg/uLyOaXgWAiLeagCqGhTqQgnBVRxW/ZLS5H7v7CELgl1p9VtsnpTwg3IE7Ybn2/VuT83e3qm8X3k03I95+BbERqPK7k7r1a9A59hRRe1IJYrGoH14sTbxuXcgNb5STMAxDad3raL82vvPrWRdyw9eKudfson4Y7YVa77tf+QnahbOxRjF35PPLEy/5ZYZhKDvtp7OubZ19eamUP1oonIh1xug7fmJXLr6TrJe1Y3ZB2wNsPfDtdny/rT2r7WnM5MYWipmhzlj9RABA7dKpxEIpP361lB8BHm3VN0PtPq5fzY8slLXj5fKJwc6YfYEIompko42KPnZj+sNU67vNV9Yvs6cnXrheeu/57er7E3ljOpuyS9p41chGqUcT8K9XyDeaHiIJKZuDigIA3U96/yQWJS8uBnb8ExcbTCsuhBxND1GwTwePTgCAZeXiS6X8uD1/ZhfQm1tgfR+YP7PrWkV/8wsrF++M2Tf8S7JWm0zUy9qxeuXjvUBvNsF6Rd/bqJwe+7I2mWi167PB+/zEqkY2Wi/l32jMnD7gl7UHs5PEReekLVX0VxaL+pGqkY12xuiVns8kAUKgdYfWZyYOESkJ+ou+yZyfXQZaAzBNQwCAaU5R633js//sX53OpiJe5FVSsZL5aO7r7r57JchLSQAg2/rgGTjOQUlY9iLeDxlt7retGi1+kntKVd39XkhNCSX57cn8pzf9voJKMjCdB5nPZrXnHOk+C6iQ0vsdzv0/miL8ZzicJMdZGYrFYkmFvBSgIhRyfz6uWz919xGEwDeT7iNt7dKpRDyRHHUerKWdUFwJIwwh7nnUjNyVMn777XOF1c3a/q/5B57t6nUfioLGf4kxxhhjjDHGGGOMMcYYe4L8DU1xktCe920BAAAAAElFTkSuQmCC">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #0A0906;
+  --surface: #111009;
+  --surface2: #181510;
+  --gold: #C4A882;
+  --gold-dim: rgba(196,168,130,0.35);
+  --gold-glow: rgba(196,168,130,0.07);
+  --cream: #F0E8D8;
+  --cream-dim: rgba(240,232,216,0.5);
+  --cream-faint: rgba(240,232,216,0.15);
+  --border: rgba(196,168,130,0.12);
+  --border-strong: rgba(196,168,130,0.25);
+  --muted: rgba(240,232,216,0.3);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* GRAIN */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.5;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.4s, padding 0.4s;
+}
+nav.scrolled {
+  background: rgba(10,9,6,0.92);
+  backdrop-filter: blur(12px);
+  padding: 16px 48px;
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-logo img {
+  width: 32px;
+  height: auto;
+}
+.nav-wordmark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  color: var(--cream);
+}
+.nav-cta {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  padding: 9px 22px;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+}
+.nav-cta:hover {
+  background: var(--gold-glow);
+  border-color: var(--gold);
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,168,130,0.06) 0%, transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+  animation: breathe 7s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,100% { transform: translate(-50%,-55%) scale(1); opacity:0.7; }
+  50%      { transform: translate(-50%,-55%) scale(1.1); opacity:1; }
+}
+
+.hero-logo {
+  width: 72px;
+  height: auto;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: riseIn 1.2s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 14vw, 140px);
+  letter-spacing: 0.06em;
+  line-height: 0.88;
+  color: var(--cream);
+  opacity: 0;
+  animation: riseIn 1s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+}
+.hero-title span {
+  display: block;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(18px, 3vw, 26px);
+  color: var(--cream-dim);
+  max-width: 520px;
+  line-height: 1.5;
+  margin-top: 24px;
+  opacity: 0;
+  animation: riseIn 1s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
+}
+
+.hero-scroll {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: riseIn 1s ease 1.2s forwards;
+  cursor: pointer;
+}
+.hero-scroll span {
+  font-size: 8px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--gold-dim), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity:0.4; transform:scaleY(1); }
+  50%     { opacity:1;   transform:scaleY(1.1); }
+}
+
+/* SECTIONS COMMON */
+section {
+  padding: 120px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* DIVIDER */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-strong), transparent);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* LABEL */
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 400;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: var(--gold);
+}
+
+/* MANIFESTO */
+.manifesto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media(max-width:768px) {
+  .manifesto-grid { grid-template-columns: 1fr; gap: 40px; }
+  nav { padding: 20px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+}
+
+.manifesto-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 180px;
+  line-height: 1;
+  color: rgba(196,168,130,0.06);
+  letter-spacing: -0.02em;
+  pointer-events: none;
+  user-select: none;
+  margin-bottom: -40px;
+}
+
+.manifesto-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 72px);
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  color: var(--cream);
+  margin-bottom: 28px;
+}
+
+.manifesto-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2vw, 21px);
+  line-height: 1.8;
+  font-weight: 300;
+  color: var(--cream-dim);
+}
+.manifesto-body p + p { margin-top: 18px; }
+
+.pull-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(24px, 4vw, 42px);
+  font-weight: 300;
+  line-height: 1.3;
+  color: var(--cream);
+  border-left: 2px solid var(--gold);
+  padding-left: 28px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* FEATURES */
+.features-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 8vw, 88px);
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  color: var(--cream);
+  margin-bottom: 60px;
+}
+.features-title span { color: var(--gold); }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+@media(max-width:768px) {
+  .features-grid { grid-template-columns: 1fr; }
+}
+
+.feature-card {
+  background: var(--surface2);
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+  cursor: default;
+}
+.feature-card:hover { background: #1E1A13; }
+.feature-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.feature-card:hover::after { transform: scaleX(1); }
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 20px;
+  display: block;
+}
+.feature-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  color: rgba(196,168,130,0.08);
+  position: absolute;
+  top: 16px; right: 20px;
+  line-height: 1;
+  pointer-events: none;
+}
+.feature-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  margin-bottom: 12px;
+}
+.feature-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* HOW IT WORKS */
+.how-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 8vw, 88px);
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  color: var(--cream);
+  margin-bottom: 72px;
+  text-align: center;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 22px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold-dim), transparent);
+}
+
+.step {
+  display: flex;
+  gap: 32px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.step:last-child { border-bottom: none; }
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  flex-shrink: 0;
+  background: var(--bg);
+  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
+}
+.step-content {}
+.step-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+.step-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* CABALA */
+.cabala-section {
+  background: var(--surface);
+  padding: 120px 24px;
+}
+.cabala-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media(max-width:768px) {
+  .cabala-inner { grid-template-columns: 1fr; gap: 48px; }
+}
+
+.tree-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+/* STATS */
+.stats-section {
+  padding: 80px 24px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stats-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+@media(max-width:768px) {
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-block {
+  padding: 40px 32px;
+  text-align: center;
+  background: var(--surface2);
+}
+.stat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 6vw, 72px);
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  display: block;
+}
+.stat-lbl {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+  display: block;
+  font-weight: 300;
+}
+
+/* FINAL CTA */
+.cta-section {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,168,130,0.07) 0%, transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.cta-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 10vw, 110px);
+  letter-spacing: 0.06em;
+  line-height: 0.9;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+.cta-title span { color: var(--gold); display: block; }
+
+.cta-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(17px, 2.5vw, 22px);
+  color: var(--cream-dim);
+  max-width: 440px;
+  line-height: 1.6;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+.form-wrap {
+  width: 100%;
+  max-width: 380px;
+}
+.form-label {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  text-align: center;
+  display: block;
+  margin-bottom: 14px;
+}
+.form-row {
+  display: flex;
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+  transition: border-color 0.3s;
+}
+.form-row:focus-within { border-color: rgba(196,168,130,0.5); }
+.form-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 15px 22px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--cream);
+  font-style: italic;
+}
+.form-input::placeholder { color: rgba(240,232,216,0.2); }
+.form-btn {
+  background: var(--gold);
+  border: none;
+  padding: 0 24px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--bg);
+  font-weight: 500;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.form-btn:hover { opacity: 0.82; }
+.success-msg {
+  display: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--gold);
+  font-weight: 300;
+  margin-top: 4px;
+  animation: riseIn 0.6s ease forwards;
+}
+.error-msg {
+  display: none;
+  font-size: 11px;
+  color: rgba(200,100,80,0.8);
+  margin-top: 10px;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* FOOTER */
+footer {
+  padding: 40px 48px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer-logo img { width: 24px; height: auto; }
+.footer-wordmark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.footer-copy {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+@keyframes riseIn {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <img src="data:image/png;base64,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" alt="Soumente">
+    <span class="nav-wordmark">Soumente</span>
+  </div>
+  <a class="nav-cta" href="#cta">Quero entrar</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="max-width:none; padding-left:24px; padding-right:24px;">
+  <div class="hero-glow"></div>
+  <img src="data:image/png;base64,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" alt="Soumente" class="hero-logo">
+  <h1 class="hero-title">Sou<span>Mente</span></h1>
+  <p class="hero-sub">O diário inteligente que transforma consciência em evolução real.</p>
+  <div class="hero-scroll" onclick="document.getElementById('manifesto').scrollIntoView({behavior:'smooth'})">
+    <span>Descobrir</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div class="reveal">
+    <div class="manifesto-grid">
+      <div>
+        <div class="manifesto-number">01</div>
+        <div class="eyebrow">Manifesto</div>
+        <h2 class="manifesto-title">A vida não é uma linha. É um jogo.</h2>
+        <div class="manifesto-body">
+          <p>Você não está "atrasado". Você está num level que ainda não completou. E isso muda tudo — porque num jogo, cada erro é informação, cada pausa é estratégia, e cada pequena vitória importa.</p>
+          <p>O Soumente nasceu de uma crença simples: quando você enxerga sua vida como uma progressão consciente, você para de se cobrar e começa a jogar melhor.</p>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:24px;">
+        <div style="background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:32px;">
+          <div style="font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:12px;">O passado</div>
+          <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; line-height:1.6; color:var(--cream-dim); font-weight:300;">Diários que você abandona na segunda semana. Metas que ficam numa lista morta. Emoções que passam sem deixar nada.</p>
+        </div>
+        <div style="background:linear-gradient(135deg,#1C1710 0%,#221C12 100%); border:1px solid var(--border-strong); border-radius:20px; padding:32px;">
+          <div style="font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:12px;">O Soumente</div>
+          <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; line-height:1.6; color:var(--cream); font-weight:300;">Um sistema vivo que aprende com você, mostra sua evolução em tempo real e te mantém no jogo mesmo nos dias difíceis.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PULL QUOTE -->
+<section style="padding: 80px 24px; text-align:center; max-width:none;">
+  <div class="reveal">
+    <p class="pull-quote">"Se o passado não define quem somos, então tudo é um eterno presente — e quem compreende isso vive em sonho lúcido."</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="reveal">
+    <div class="eyebrow">Funcionalidades</div>
+    <h2 class="features-title">Tudo que você<br><span>precisa para evoluir</span></h2>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <span class="feature-num">01</span>
+      <span class="feature-icon">⬡</span>
+      <div class="feature-name">Jogo de Metas</div>
+      <p class="feature-desc">Transforme objetivos grandes em levels progressivos. Cada missão concluída gera XP e avança você no mapa da sua vida.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-num">02</span>
+      <span class="feature-icon">✦</span>
+      <div class="feature-name">Diário Emocional</div>
+      <p class="feature-desc">Registre como você está todos os dias — emoção, texto livre e a dimensão do que viveu. De sutil a transformador.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-num">03</span>
+      <span class="feature-icon">◈</span>
+      <div class="feature-name">IA que te conhece</div>
+      <p class="feature-desc">Uma inteligência que aprende seu padrão emocional, suas palavras e seus bloqueios — e fala com você de verdade.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-num">04</span>
+      <span class="feature-icon">△</span>
+      <div class="feature-name">Mapa de Evolução</div>
+      <p class="feature-desc">Veja seu crescimento visualmente — mapa de calor emocional, radar de dimensões e timeline de conquistas.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-num">05</span>
+      <span class="feature-icon">◎</span>
+      <div class="feature-name">Relatório de Vida</div>
+      <p class="feature-desc">A cada 3 meses, um documento editorial com quem você era e quem você se tornou. Exportável em PDF.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-num">06</span>
+      <span class="feature-icon">🌱</span>
+      <div class="feature-name">Cápsula do Tempo</div>
+      <p class="feature-desc">Escreva para o seu eu do futuro. A mensagem é desbloqueada automaticamente em 6 meses ou 1 ano.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- HOW IT WORKS -->
+<section id="como">
+  <div class="reveal" style="text-align:center;">
+    <div class="eyebrow" style="justify-content:center;">Como funciona</div>
+    <h2 class="how-title">Simples por fora.<br>Profundo por dentro.</h2>
+  </div>
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title">Crie seu primeiro objetivo</div>
+        <p class="step-desc">Defina um Boss Level — seu grande objetivo — e quebre ele em levels menores e missões concretas. O jogo começa.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title">Registre seu dia</div>
+        <p class="step-desc">Todo dia, a IA pergunta como você está. Você escolhe sua emoção, escreve o que viveu e classifica a dimensão daquele momento.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title">A IA aprende com você</div>
+        <p class="step-desc">Com cada entrada, a inteligência mapeia seus padrões — o que te motiva, o que te trava, o que te liberta. Ela nunca esquece.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title">Veja quem você está se tornando</div>
+        <p class="step-desc">Seu mapa emocional, seu XP acumulado, seus levels vencidos. A evolução que você sentia agora você vê.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CABALA -->
+<div class="cabala-section">
+  <div class="cabala-inner">
+    <div class="reveal">
+      <div class="eyebrow">A arquitetura</div>
+      <h2 class="manifesto-title">Do invisível ao real.</h2>
+      <div class="manifesto-body">
+        <p>O Soumente foi construído sobre a lógica da Árvore da Vida da Cabala: toda manifestação percorre um caminho da ideia até o físico.</p>
+        <p>Primeiro você sente. Depois pensa. Depois age. O app respeita essa ordem — e te ajuda a completar o ciclo em vez de ficar parado no campo mental.</p>
+        <p style="margin-top:24px; font-size:14px; letter-spacing:0.08em; color:var(--muted);">Kether → Tiferet → Malkuth<br>Luz → Mente → Realidade</p>
+      </div>
+    </div>
+    <div class="tree-wrap reveal">
+      <svg width="240" height="380" viewBox="0 0 200 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="100" y1="30" x2="60" y2="100" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="100" y1="30" x2="140" y2="100" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="60" y1="100" x2="140" y2="100" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="60" y1="100" x2="60" y2="180" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="140" y1="100" x2="140" y2="180" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="100" y1="30" x2="100" y2="140" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="60" y1="180" x2="100" y2="140" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="140" y1="180" x2="100" y2="140" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="60" y1="180" x2="100" y2="250" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="140" y1="180" x2="100" y2="250" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="100" y1="140" x2="100" y2="250" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <line x1="100" y1="250" x2="100" y2="330" stroke="#C4A882" stroke-width="0.7" opacity="0.4"/>
+        <circle cx="100" cy="30" r="13" fill="#0A0906" stroke="#C4A882" stroke-width="1"/>
+        <text x="100" y="34" text-anchor="middle" font-family="Bebas Neue" font-size="7.5" fill="#C4A882">Kether</text>
+        <circle cx="60" cy="100" r="10" fill="#0A0906" stroke="#C4A882" stroke-width="0.8"/>
+        <text x="60" y="104" text-anchor="middle" font-family="Bebas Neue" font-size="6.5" fill="#C4A882">Chokmah</text>
+        <circle cx="140" cy="100" r="10" fill="#0A0906" stroke="#C4A882" stroke-width="0.8"/>
+        <text x="140" y="104" text-anchor="middle" font-family="Bebas Neue" font-size="6.5" fill="#C4A882">Binah</text>
+        <circle cx="100" cy="140" r="12" fill="#0A0906" stroke="#E8D5B7" stroke-width="1.2"/>
+        <text x="100" y="144" text-anchor="middle" font-family="Bebas Neue" font-size="7" fill="#E8D5B7">Tiferet</text>
+        <circle cx="60" cy="180" r="9" fill="#0A0906" stroke="#C4A882" stroke-width="0.8"/>
+        <text x="60" y="184" text-anchor="middle" font-family="Bebas Neue" font-size="6" fill="#C4A882">Netzach</text>
+        <circle cx="140" cy="180" r="9" fill="#0A0906" stroke="#C4A882" stroke-width="0.8"/>
+        <text x="140" y="184" text-anchor="middle" font-family="Bebas Neue" font-size="6" fill="#C4A882">Hod</text>
+        <circle cx="100" cy="250" r="10" fill="#0A0906" stroke="#C4A882" stroke-width="0.8"/>
+        <text x="100" y="254" text-anchor="middle" font-family="Bebas Neue" font-size="7" fill="#C4A882">Yesod</text>
+        <circle cx="100" cy="330" r="13" fill="#1A1208" stroke="#8B3A2A" stroke-width="1.5"/>
+        <text x="100" y="334" text-anchor="middle" font-family="Bebas Neue" font-size="7.5" fill="#8B3A2A">Malkuth</text>
+        <text x="6" y="34" font-family="DM Sans" font-size="6" fill="rgba(240,232,216,0.2)" letter-spacing="1">LUZ</text>
+        <text x="6" y="144" font-family="DM Sans" font-size="6" fill="rgba(240,232,216,0.2)" letter-spacing="1">MENTE</text>
+        <text x="6" y="254" font-family="DM Sans" font-size="6" fill="rgba(240,232,216,0.2)" letter-spacing="1">EMOÇÃO</text>
+        <text x="6" y="330" font-family="DM Sans" font-size="6" fill="rgba(240,232,216,0.2)" letter-spacing="1">FÍSICO</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-inner reveal">
+    <div class="stat-block">
+      <span class="stat-val">4</span>
+      <span class="stat-lbl">Dimensões da vida</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-val">∞</span>
+      <span class="stat-lbl">Levels possíveis</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-val">1</span>
+      <span class="stat-lbl">IA que te conhece</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-val">0</span>
+      <span class="stat-lbl">Julgamentos</span>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<section class="cta-section" id="cta" style="max-width:none;">
+  <div class="cta-glow"></div>
+  <div class="reveal" style="display:flex; flex-direction:column; align-items:center;">
+    <h2 class="cta-title">Plante sua<span>semente.</span></h2>
+    <p class="cta-sub">Entre na lista de espera e seja o primeiro a jogar o jogo da sua própria vida.</p>
+    <div class="form-wrap">
+      <span class="form-label">Acesso antecipado</span>
+      <div class="form-row" id="formRow">
+        <input class="form-input" type="email" id="emailInput" placeholder="seu@email.com">
+        <button class="form-btn" id="submitBtn" onclick="handleSubmit()">Entrar</button>
+      </div>
+      <div class="error-msg" id="errorMsg">Algo deu errado. Tente novamente.</div>
+      <div class="success-msg" id="successMsg">A semente foi plantada. Vamos crescer juntos. 🌱</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="data:image/png;base64,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" alt="Soumente">
+    <span class="footer-wordmark">Soumente</span>
+  </div>
+  <span class="footer-copy">© 2026 · Em desenvolvimento</span>
+</footer>
+
+<script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Form submit
+  async function handleSubmit() {
+    const input = document.getElementById('emailInput');
+    const btn = document.getElementById('submitBtn');
+    const email = input.value.trim();
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      input.style.opacity = '0.5';
+      input.focus();
+      setTimeout(() => input.style.opacity = '1', 600);
+      return;
+    }
+    btn.textContent = '...';
+    btn.style.opacity = '0.6';
+    btn.style.pointerEvents = 'none';
+    try {
+      const res = await fetch('https://formspree.io/f/mbdegjep', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (res.ok) {
+        document.getElementById('formRow').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+      } else { throw new Error(); }
+    } catch(e) {
+      btn.textContent = 'Entrar';
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+      document.getElementById('errorMsg').style.display = 'block';
+    }
+  }
+
+  document.getElementById('emailInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubmit();
+  });
+</script>
+</body>
+</html>
